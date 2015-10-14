@@ -78,7 +78,8 @@ func main() {
 			*/
 			model = modelInfo{1, 0, 0, 1, 1, "360"}
 
-		case desc.Vendor == 0x045e && desc.Product == 0x02d1:
+//		case desc.Vendor == 0x045e && desc.Product == 0x02d1:
+		case desc.Vendor == 0x0e6f && desc.Product == 0x0146:
 			log.Printf("Found Microsoft Xbox One controller")
 			/*
 			   250.006 045e:02d1 Unknown (Microsoft Corp.)
@@ -140,6 +141,7 @@ func main() {
 		}
 		return true
 	})
+	log.Printf("dev %s", devs)
 	if err != nil {
 		log.Fatalf("listdevices: %s", err)
 	}
@@ -428,8 +430,30 @@ func XBoxOne(controller *usb.Device, in, out usb.Endpoint) {
 	var err error
 
 	// Initializ
-	err = write(0x05, 0x20)
+	//err = write(0x05, 0x20)
+	//dieIf(err, "initialization")
+	read()
+	err = write(0x04, 0x20, 0x01, 0x00)
 	dieIf(err, "initialization")
+	read()
+	err = write(0x01, 0x20, 0x01, 0x09, 0x00, 0x04, 0x20, 0x3a, 0x00, 0x00, 0x00, 0x80, 0x00)
+	dieIf(err, "initialization")
+	read()
+	read()
+	read()
+	err = write(0x01, 0x20, 0x01, 0x09, 0x00, 0x04, 0x20, 0xba, 0x00, 0x00, 0x00, 0x00, 0x00)
+	dieIf(err, "initialization")
+	read()
+	err = write(0x05, 0x20, 0x02, 0x09, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x55, 0x53)
+	dieIf(err, "initialization")
+	read()
+	err = write(0x05, 0x20, 0x03, 0x01, 0x00)
+	dieIf(err, "initialization")
+	read()
+	read()
+	err = write(0x0a, 0x20, 0x04, 0x03, 0x00, 0x01, 0x14)
+	read()
+
 
 	decode := func(data []byte) {
 		if len(data) != 16 {
