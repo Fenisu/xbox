@@ -477,7 +477,8 @@ func XBoxOne(controller *usb.Device, in, out usb.Endpoint) {
 		// btn1, least to most significant
 		for i, btn := range []string{
 			"SYNC", "BTN1|0x02", "MENU", "SHARE",
-			"A", "X", "B", "Y",
+//			"A", "X", "B", "Y",
+			"A", "B", "X", "Y",
 		} {
 			if btn1&(1<<uint(i)) != 0 {
 				log.Print(btn)
